@@ -1,0 +1,58 @@
+﻿
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Inputs
+
+
+
+<SfTextBox @ref="Textbox" ID="@Id" Value="@CustomValue" Readonly="@PreventType" Placeholder="@Placeholder" Width="@Width" Created="CreatedEvent" ></SfTextBox>
+
+@code {
+
+
+    public SfTextBox Textbox { get; set; }
+
+    [Parameter]
+    public CaseType TextCase { get; set; } = CaseType.Normal;
+
+    [Parameter]
+    public bool AllowSpaces { get; set; } = true;
+
+    [Parameter]
+    public bool AllowSpecialCharacters { get; set; } = true;
+
+    [Parameter]
+    public bool PreventType { get; set; }
+
+    [Parameter]
+    public CharacterType ValueType { get; set; } = CharacterType.AlphaNumeric;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string CustomValue { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; }
+
+    [Parameter]
+    public string Width { get; set; }
+
+    [Parameter]
+    public EventCallback CreatedEvent { get; set; }
+
+    public enum CaseType
+    {
+        UpperCase,
+        LowerCase,
+        Normal
+    }
+
+    public enum CharacterType
+    {
+        AlphaNumeric,
+        Numeric,
+        Alpha
+    }
+}
+

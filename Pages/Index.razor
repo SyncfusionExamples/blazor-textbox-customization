@@ -1,0 +1,33 @@
+﻿@page "/"
+@using Syncfusion.Blazor.Inputs
+@inject IJSRuntime JSRuntime
+
+
+@if (IsRendered)
+{
+ <div>
+        <p>TextCase             : @TextboxInstance.TextCase</p>
+        <p>AllowSpaces          : @TextboxInstance.AllowSpaces</p>
+        <p>AllowSpecialCharacter: @TextboxInstance.AllowSpecialCharacters</p>
+        <p>ValueType            : @TextboxInstance.ValueType</p>
+        <p>PreventType          : @TextboxInstance.PreventType</p>
+    </div>
+}
+    <div>
+   
+    <CustomTextbox @ref="TextboxInstance" Id="textbox" 
+    TextCase="CustomTextbox.CaseType.UpperCase" PreventType="false" AllowSpaces="false" AllowSpecialCharacters="false" ValueType="CustomTextbox.CharacterType.AlphaNumeric" Placeholder="Enter a value" CreatedEvent="OnCreated" Width="200px"></CustomTextbox></div>
+@code{
+
+    public CustomTextbox TextboxInstance { get; set; }
+
+    public bool IsRendered { get; set; }
+
+    public async Task OnCreated ()
+    {
+        this.IsRendered = true;
+        await JSRuntime.InvokeVoidAsync("validateTextBox", TextboxInstance);
+    }
+
+}
+
