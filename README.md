@@ -2,6 +2,8 @@
 
 This sample explains about how to customize the Syncfusion Blazor TextBox component.
 
+**Reference link**: [https://blazor.syncfusion.com/documentation/textbox/how-to/create-custom-component-with-validation](https://blazor.syncfusion.com/documentation/textbox/how-to/create-custom-component-with-validation)
+
 ## Prerequisites
 
 * Visual Studio 2022

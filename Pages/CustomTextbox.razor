@@ -1,58 +1,76 @@
-﻿
-@using Syncfusion.Blazor.DropDowns;
+﻿@using System.Linq.Expressions;
 @using Syncfusion.Blazor.Inputs
 
-
-
-<SfTextBox @ref="Textbox" ID="@Id" Value="@CustomValue" Readonly="@PreventType" Placeholder="@Placeholder" Width="@Width" Created="CreatedEvent" ></SfTextBox>
+<SfTextBox Value="@Value" FloatLabelType="FloatLabelType.Never" HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", MaxLength }, {"minlength", MinLength}, {"rows", Multiline ? 3 : 1} })"
+           ID="@ID" Multiline="@Multiline" ValueChanged="ValueChanged" ValueExpression="@ValueExpression" Placeholder="@Placeholder" Readonly="@Readonly" @ref="Box" ValidateOnInput="true" Width="200px">
+    <ValidationMessage For="@ValidationMessage">
+    </ValidationMessage>
+</SfTextBox>
 
 @code {
 
-
-    public SfTextBox Textbox { get; set; }
+    private string _value;
+    [Parameter]
+    public string Value
+    {
+        get => _value;
+        set
+        {
+            if (!EqualityComparer<string>.Default.Equals(value, _value))
+            {
+                _value = value;
+                ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
 
     [Parameter]
-    public CaseType TextCase { get; set; } = CaseType.Normal;
+    public Expression<Func<string>> ValueExpression { get; set; }
+
 
     [Parameter]
-    public bool AllowSpaces { get; set; } = true;
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private SfTextBox Box { get; set; }
+
+    private FieldIdentifier Field { get; set; }
+
+    [CascadingParameter]
+    public EditContext EditContext { get; set; } = default!;
 
     [Parameter]
-    public bool AllowSpecialCharacters { get; set; } = true;
+    public string ID { get; set; }
 
     [Parameter]
-    public bool PreventType { get; set; }
+    public int MaxLength { get; set; }
 
     [Parameter]
-    public CharacterType ValueType { get; set; } = CharacterType.AlphaNumeric;
+    public int MinLength { get; set; }
 
     [Parameter]
-    public string Id { get; set; }
-
-    [Parameter]
-    public string CustomValue { get; set; }
+    public bool Multiline { get; set; }
 
     [Parameter]
     public string Placeholder { get; set; }
 
     [Parameter]
-    public string Width { get; set; }
+    public bool Readonly { get; set; }
 
     [Parameter]
-    public EventCallback CreatedEvent { get; set; }
+    public Expression<Func<string>> ValidationMessage { get; set; }
 
-    public enum CaseType
+    protected override void OnInitialized()
     {
-        UpperCase,
-        LowerCase,
-        Normal
+        Field = EditContext.Field("Text");
+        EditContext.OnValidationStateChanged += HandleValidationStateChanged;
     }
 
-    public enum CharacterType
+    private void HandleValidationStateChanged(object sender, ValidationStateChangedEventArgs e)
     {
-        AlphaNumeric,
-        Numeric,
-        Alpha
+        StateHasChanged();
+        bool _invalid = EditContext.GetValidationMessages(Field).Any();
+        Box?.UpdateParentClass("", "");
+        StateHasChanged();
     }
+
 }
-
